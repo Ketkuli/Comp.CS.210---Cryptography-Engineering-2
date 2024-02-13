@@ -17,9 +17,9 @@ One of the videos for this week explains this method of sharing a secret
 You need not use that method here. Instead just write a system of equations 
 (as is done in the follow-up video), with obvious meanings for R, T and V:
 
-a + R b + R2 c = s
-a + T b + T2 c = u
-a + V b + V2 c = w
+a + R b + R^2 c = s
+a + T b + T^2 c = u
+a + V b + V^2 c = w
 
 Solve it for a, b and c, and pick the a as your answer to Moodle. As an exercise 
 do this by inverting the coefficient matrix modulo 1009, and use it to multiply  
@@ -30,3 +30,43 @@ but just any (modularly) nonzero element will do. You cannot do division
 directly but you must invert the pivot element modulo 1009 (preferrably with 
 your function from Ex1). Otherwise the procedure is the same.
 """
+
+r = 1
+s = 9
+t = 4
+u = 5
+v = 0
+w = 0
+
+R = 10 + r
+T = 20 + t
+V = 30 + v 
+
+# a + R*b + (R**2)*c = s
+# a + T*b + (T**2)*c = u
+# a + V*b + (V**2)*c = w
+
+A = [[1, R, R**2],
+     [1, T, T**2],
+     [1, V, V**2]]
+
+b = [[s],
+     [u],
+     [v]]
+
+# To solve the values of a, b and c we know that coefficient matrix calculus is
+# following: Ax = b where A is the coefficients, x is a column of unknown 
+# variables and the b is the solution column. 
+
+# This gives us the knowledge that x equals the inverse of A multiplied with b.
+# Import gauss jordan to calculate inverse:
+from GaussJordan import *
+from LLL import multiply
+
+print(A)
+
+inverse = invert(A)
+
+print(inverse)
+
+
