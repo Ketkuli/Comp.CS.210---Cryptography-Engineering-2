@@ -65,3 +65,137 @@ See short lecture notes by Chris Peikert on breaking the knapsack with lattice
 reduction. There you'll see the base matrix in transposed form and the last row 
 multiplied by a large constant.
 """
+
+from numpy import invert, transpose
+
+test = [300, 
+        500, 
+        600, 
+        700]
+testSum = 1200
+
+givenPublicKey = [7035238348546, 7589484607469, 5006080475994, 5701080243151, 
+                  7093112614563, 5419139272946, 6739805882947, 4308219917231, 
+                  7666668559292, 7855284573687, 4931746167290, 7329232672795, 
+                  4709097576863, 6623899022169, 4407434511793, 5267629531588, 
+                  7930493753592, 7651225087488, 7406118667681, 4960648457133, 
+                  7180236876183, 4352772048223, 6546713299361, 4353662854347]
+
+
+subsetSum = 60615973367597
+
+# Stuff provided by teacher begins:
+
+# To get the inverse W of a square matrix M, call: W = invert(M)
+from GaussJordan import *
+
+# Inner product (dot product) of vectors a and b.
+def dotp(a,b):
+    return sum(x*y for x, y in zip(a, b))
+
+# Transpose of matrix a.
+def transpose(a):
+    return [[row[col] for row in a] for col in range(len(a[0]))]
+
+# Multiply square matrices a and b.
+def multiply(a,b):
+    n = len(a)
+    res = [[0 for i in range(n)] for j in range(n)]
+    for i in range(n):
+        for j in range(n):
+            for k in range(n):
+                res[i][j] += a[i][k] * b[k][j]
+    return res
+
+# The only operation inside Gram-Schmidt:
+# subtract from v the projection of v onto u.
+def project_and_subtract(u, v):
+    udotv_per_udotu = dotp(u, v) / dotp(u, u)
+    return [ (v_i-udotv_per_udotu*u_i)  for v_i, u_i in zip(v, u) ]
+
+# Gram-Schmidt orthogonalization for a list of vectors
+def GS(vectors):
+    ulist = []
+    for v in vectors:
+        for u in ulist:
+            v = project_and_subtract( u, v )  # project v onto u
+        ulist.append(v)
+    return ulist
+
+# LLL-reduction
+def LLL(basis, delta=0.75):
+    n = len(basis)
+    B = GS(basis)
+    Bstar = multiply(B, invert(multiply(transpose(B), B)) )
+    def mu(i,j):
+        return dotp(basis[i], Bstar[j])
+    k = 1
+    while k < n:
+        for j in range(k-1, -1, -1):
+            mu_kj = mu(k,j)
+            if abs(mu_kj) > 0.5:
+                basis[k] = [basis[k][i] - round(mu_kj)*basis[j][i] for i in range(n)]
+                B = GS(basis)
+                Bstar = multiply(B, invert(multiply(transpose(B), B)))
+        if dotp(B[k],B[k])**2 >= (delta - mu(k, k-1)**2)*dotp(B[k-1],B[k-1])**2:
+            k += 1
+        else:
+            basis[k], basis[k-1] = basis[k-1], basis[k]
+            B = GS(basis)
+            Bstar = multiply(B, invert(multiply(transpose(B), B)) )
+            k = max(k-1, 1)
+    return basis
+
+# Stuff provided by teacher ends.
+
+# Create basis aka NxN identity matrix where last column is the values and the 
+# sum which is needed to solve:
+
+def createBasis(values, sum):
+    # Create identity matrix
+    n = len(values)
+    basis = [[0] * i + [1] + [0] * (n - i - 1) for i in range(n)]
+
+    # append values in the values as last column to the identity matrix:
+    for i in range(n):
+        basis[i].append(values[i])
+
+    #Create last row:
+    lastRow = [0]*n
+    lastRow.append(-1*sum)
+
+    basis.append(lastRow)
+    return basis
+
+
+def checkResult(binaryVector,publicKey, sum):
+    checkSum = 0
+    for index in range(len(binaryVector)-1):
+        if binaryVector[index] == 1:
+            checkSum += publicKey[index]
+
+    if checkSum == sum:
+        return True
+    else:
+        return False
+
+
+def main():
+    #basis = createBasis(test,testSum)
+    basis = createBasis(givenPublicKey, subsetSum)
+    print("This is the original matrix:")
+    for row in basis:
+        print(row)
+
+    print("\nThis is the solution and the solution is on the top line:")
+    solution = LLL(basis)
+    for row in solution:
+        print(row)
+
+    #result = checkResult(solution[0], test, testSum)
+    result = checkResult(solution[0], givenPublicKey, subsetSum)
+    print(f"\nThe solution is {result}")
+
+
+
+main()

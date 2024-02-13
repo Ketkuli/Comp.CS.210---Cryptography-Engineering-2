@@ -34,3 +34,41 @@ algorithm, without knowing the trapdoor. You can try the approach of Hp2 also
 with this Ex3 but you probably won't get good results—if any. Remember that here 
 in Ex3 you are the legitimate owner of the knapsack.
 """
+
+studentNumber = "194500"  # As a string for easier use of single numbers
+
+# Create the superincreasing list:
+A = [2]
+
+listSum = 2
+
+# Iterate through the string characters:
+for number in studentNumber:
+    number = int(number) # Convert char to int
+    toAppend = listSum + 1 + number
+    A.append(toAppend)
+    listSum += toAppend 
+
+for i in range(7,40):
+    toAppend = listSum + 1
+    A.append(listSum)
+    listSum += toAppend
+
+W = 54321*(10**8)+int(studentNumber)
+
+primeFromEx2 = 6005491011001  # Copy-paste from running Ex2, should be correct!
+p = primeFromEx2
+
+# Let W = 54321*108 + six last digits of your student number. Using your own 
+# prime p from Ex2, multiply each element in the sequence with W modulo p to 
+# make list B.
+
+B =[(number*W%p) for number in A]
+
+# This B is the public key in Merkle-Hellman knapsack cryptosystem
+
+randomSum = 72314441329827
+
+print(B)
+
+
