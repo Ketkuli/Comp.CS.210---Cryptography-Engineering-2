@@ -92,6 +92,6 @@ for prime in primes:
         else:
             break
     if success == 5:
-        print(f"The smallest primitive root of {PRIME} is {prime}") # is 2.
+        print(f"The smallest primitive root of {PRIME} is {prime}") # is 29.
         break
 
