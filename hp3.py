@@ -31,6 +31,8 @@ directly but you must invert the pivot element modulo 1009 (preferrably with
 your function from Ex1). Otherwise the procedure is the same.
 """
 
+primeField = 1009
+
 r = 1
 s = 9
 t = 4
@@ -52,7 +54,7 @@ A = [[1, R, R**2],
 
 b = [[s],
      [u],
-     [v]]
+     [w]]
 
 # To solve the values of a, b and c we know that coefficient matrix calculus is
 # following: Ax = b where A is the coefficients, x is a column of unknown 
@@ -60,13 +62,37 @@ b = [[s],
 
 # This gives us the knowledge that x equals the inverse of A multiplied with b.
 # Import gauss jordan to calculate inverse:
-from GaussJordan import *
-from LLL import multiply
+from GaussJordan import modularInvert
+
+# Multiply square matrix a and column vector b.
+def multiply(a,b):
+    n = len(a)
+    res = [[0],[0],[0]]
+    for i in range(n):
+        for j in range(n):
+            res[i][0] += a[i][j] * b[j][0]
+    return res
+
+def isTrue(solution):
+    a = solution[0][0]
+    b = solution[1][0]
+    c = solution[2][0]
+
+    if a+b*R+c*R**2 == s and a+b*T+c*T**2 == u  and a+b*V+c*V**2 == w:
+        return True
+    else:
+        return False 
+
 
 print(A)
 
-inverse = invert(A)
+inverse = modularInvert(A, primeField)
+solution = multiply(inverse, b)
 
 print(inverse)
+print(solution)
+
+print(f"The solution is {isTrue(solution)}")
+
 
 
