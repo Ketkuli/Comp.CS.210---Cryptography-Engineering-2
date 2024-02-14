@@ -18,25 +18,6 @@ Sage, though.
 Link to the video: https://www.youtube-nocookie.com/embed/92qhT8BAdRk
 '''
 
-def EEA(a, b):
-    """return (g, x, y) such that a*x + b*y = g = gcd(a, b)"""
-
-    if a == 0:
-        return (b, 0, 1)
-    else:
-        b_div_a, b_mod_a = divmod(b, a)
-        gcd, x, y = modular_inversion(b_mod_a, a)
-        return (gcd, y - b_div_a * x, x)
-
-
-def modular_inversion(a, b):
-    """return x such that (x * a) % b == 1"""
-    g, x, y = EEA(a, b)
-    if g != 1:
-        raise Exception('gcd(a, b) != 1')
-    return x % b
-
-
 def exponentiation(base, exp, mod):
     if (exp == 0):
         return 1
@@ -55,3 +36,25 @@ def exponentiation(base, exp, mod):
     # odd value
     else:
         return ((base % mod) * t) % mod
+
+
+def gcdExtended(a, b):
+ 
+    # Base Case
+    if a == 0:
+        return b, 0, 1
+ 
+    gcd, x1, y1 = gcdExtended(b % a, a)
+ 
+    # Update x and y using results of recursive
+    # call
+    x = y1 - (b//a) * x1
+    y = x1
+ 
+    return gcd, x, y
+
+
+p = 1009
+q = 1013
+
+print(gcdExtended(p,q))
