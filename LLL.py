@@ -23,7 +23,7 @@ def multiply(a,b):
 # subtract from v the projection of v onto u.
 def project_and_subtract(u, v):
     udotv_per_udotu = dotp(u, v) / dotp(u, u)
-    return [ ????   for v_i, u_i in zip(v, u) ]
+    return [(v_i-udotv_per_udotu*u_i) for v_i, u_i in zip(v, u) ]
 
 # Gram-Schmidt orthogonalization for a list of vectors
 def GS(vectors):
@@ -38,7 +38,7 @@ def GS(vectors):
 def LLL(basis, delta=0.75):
     n = len(basis)
     B = GS(basis)
-    Bstar = multiply( ???? )
+    Bstar = multiply(B, invert(multiply(transpose(B), B)) )
     def mu(i,j):
         return dotp(basis[i], Bstar[j])
     k = 1
@@ -48,12 +48,12 @@ def LLL(basis, delta=0.75):
             if abs(mu_kj) > 0.5:
                 basis[k] = [basis[k][i] - round(mu_kj)*basis[j][i] for i in range(n)]
                 B = GS(basis)
-                Bstar = multiply( ???? )
+                Bstar = multiply( B, invert(multiply(transpose(B), B)) )
         if dotp(B[k],B[k])**2 >= (delta - mu(k, k-1)**2)*dotp(B[k-1],B[k-1])**2:
             k += 1
         else:
             basis[k], basis[k-1] = basis[k-1], basis[k]
             B = GS(basis)
-            Bstar = multiply( ???? )
+            Bstar = multiply(B, invert(multiply(transpose(B), B)) )
             k = max(k-1, 1)
     return basis
