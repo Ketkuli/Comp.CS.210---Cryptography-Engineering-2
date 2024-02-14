@@ -57,7 +57,22 @@ def invert(matrix):
 # teacher.
 
 # Import the function to calculate modular inverse in finite field.
-from gcdExtended import *
+# from gcdExtended import *
+
+def gcdExtended(a, b):
+ 
+    # Base Case
+    if a == 0:
+        return b, 0, 1
+ 
+    gcd, x1, y1 = gcdExtended(b % a, a)
+ 
+    # Update x and y using results of recursive
+    # call
+    x = y1 - (b//a) * x1
+    y = x1
+ 
+    return gcd, x, y
 
 def modularInvert(matrix, prime):
     n = len(matrix)     # matrix is a list of rows.
@@ -73,16 +88,20 @@ def modularInvert(matrix, prime):
 
     # Treat the rows with index i (i.e. have each row i as a pivot row in its turn).
     for i in range(n):
-        max_abs = abs(M[i][i])  # find the maximal element in column i. 
-        max_row = i             # the initial finding being in row i.
-        for k in range(i+1, n):             # Continue search belo row i.
-            if abs(M[k][i]) > max_abs:
-                max_abs = abs(M[k][i])
-                max_row = k
-        if max_row != i:                                # If the initial finding changed,
-            M[i], M[max_row] = M[max_row], M[i]            # swap rows to get the maximal on row i
-            INV[i], INV[max_row] = INV[max_row], INV[i]    # do the same swap in the INV side.
-        pivot = M[i][i]                                 # (Note: the real, not abs value, of course.)
+        pivot_test = M[i][i]        # find the maximal element in column i. 
+        pivot_row = i               # the initial finding being in row i.
+        gcd, x, y = gcdExtended(pivot_test, prime)
+        if x == 0:                  # the inverse is modulary zero -> not pivot
+            for k in range(i+1, n):         # Continue search below row i.
+                pivot_test = M[k][i]
+                pivot_row = k
+                gcd, x, y = gcdExtended(pivot_test, prime)    
+                if x != 0:
+                    break
+        if pivot_row != i:                                # If the initial finding changed,
+            M[i], M[pivot_row] = M[pivot_row], M[i]            # swap rows to get the maximal on row i
+            INV[i], INV[pivot_row] = INV[pivot_row], INV[i]    # do the same swap in the INV side.
+        pivot = x                                 # (Note: the real, not abs value, of course.)
 
         if pivot == 0:
             raise Exception('Matrix is singular and cannot be inverted')
