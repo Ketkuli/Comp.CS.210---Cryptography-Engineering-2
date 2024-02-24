@@ -81,7 +81,7 @@ def modularInvert(matrix, prime):
             raise Exception('Matrix is not square')
 
     # The work area will be two square matrices M & INV "side by side". 
-     # INV starts as the identity matrix and ends as inverse of M, which ends as the identity matrix.
+    # INV starts as the identity matrix and ends as inverse of M, which ends as the identity matrix.
         
     M = [row[:] for row in matrix]  # Create a copy so that the calling script does not have its variable altered
     INV = [[float(i == j) for i in range(n)] for j in range(n)] # A simple way to create an identity matrix
