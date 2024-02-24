@@ -77,8 +77,11 @@ def isTrue(solution):
     a = solution[0][0]
     b = solution[1][0]
     c = solution[2][0]
+    #a = 818
+    #b = 49
+    #c = 706
 
-    if a+b*R+c*R**2 == s and a+b*T+c*T**2 == u  and a+b*V+c*V**2 == w:
+    if (a+b*R+c*R**2)%primeField == s and (a+b*T+c*T**2)%primeField == u  and (a+b*V+c*V**2)%primeField == w:
         return True
     else:
         return False 
