@@ -125,7 +125,7 @@ def reverse_numbers(number):
 R = reverse_numbers(194500)
 
 N_to_look_for = 6*(10**12)+R*(10**6)+2*R
-print(find_next_prime(N_to_look_for))
+print(find_next_prime(N_to_look_for)%10000)
 
 
 
