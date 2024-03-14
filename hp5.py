@@ -45,6 +45,9 @@ def addEC(x:list[int,int], y:list[int,int], c:list[int,int, int])->list[int,int]
     elif y == infinity:
         return x
     
+    elif x == y:
+        return doublEC(x,c)
+    
     # Go to the calculation of the parameters in the elliptic curve:
     else:
         x1,y1 = x
@@ -52,10 +55,10 @@ def addEC(x:list[int,int], y:list[int,int], c:list[int,int, int])->list[int,int]
         p,a,b = c
         # Calculations to get the slope s:
         # Get multiplicative modular inverse for x2-x1:
-        gcd, amodp, pmoda = gcdExtended((x2-x1)%p,p)  
+        gcd, amodp, pmoda = gcdExtended((x2-x1)%p,p)
         
         # Calculate the slope:
-        s = (y2-y1)*amodp%p
+        s = ((y2-y1)*amodp)%p
         # Check is slope is vertical:
         if s == 0:
             return infinity
@@ -81,7 +84,7 @@ def doublEC(x:list[int,int], c:list[int,int, int])->list[int,int]:
     gcd, amodp, pmoda = gcdExtended((2*y1)%p,p)
 
     # Calculate the slope:
-    s = (3*x1**2+a)*amodp%p
+    s = ((3*x1**2+a)*amodp)%p
 
     # Calculate new points:
     x3 = (s**2-x1-x1)%p
