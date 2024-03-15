@@ -1,4 +1,5 @@
 from hp5 import doublEC, addEC
+from ECDLP import solveECDLP
 
 def isEllipticCurve(a:int,b:int,p:int)->bool:
     if a == 0 or b == 0:
@@ -7,19 +8,7 @@ def isEllipticCurve(a:int,b:int,p:int)->bool:
         return False
     else:
         return True
-    
-
-def solveECDLP(x:list[int,int], target:list[int,int], c:list[int,int,int])->int:
-    """
-    param:
-    x = [x1,y1]
-    y = [x2,y2]
-    c = [p,a,b]
-
-    Returns k from Q = kP mod p
-    """
-    return 0
-        
+          
 
 def doubleAndAdd(P:list[int,int], k:int, c:list[int,int,int])->list[int,int]:
     """
@@ -46,8 +35,6 @@ def doubleAndAdd(P:list[int,int], k:int, c:list[int,int,int])->list[int,int]:
             T = addEC(T,P,c)          
         i += 1
 
-    #print(i, k)
-    #print(T)
     return T
 
 
@@ -65,7 +52,7 @@ def ECDH(P:list[int,int], c:list[int,int,int], ska:int, skb:int)->list[int,int]:
         return Tab
 
 def main():
-    print("Question 1:")
+    print("\nQuestion 1:")
     print("The equation y^2 = x^3 + 3x + 7 mod 23 is elliptic curve:")
     print(isEllipticCurve(3,7,23))
     print("The equation y^2 = x^3 + 11x + 7 mod 23 is elliptic curve:")
@@ -95,18 +82,18 @@ def main():
     print("Compute P+Q where P=(17,18) and Q=(17,18)")
     print(addEC([17,18],[17,18],[23,7,7]))
 
-    print("\nQuestion 4: SOLVE PENDING")
-    #print("Given points P=(2,12) and Q=(8,0) on the curve with equation\
-#y2=x3+7x+7mod23,\n find the smalllest positive k that Q=kP holds.\
-#In other words solve the discrete logarithm problem.")
-    #print(solveECDLP([2,12],[8,0],[23,7,7]))
+    print("\nQuestion 4: ")
+    print("Given points P=(2,12) and Q=(8,0) on the curve with equation\
+y2=x3+7x+7mod23,\nfind the smallest positive k that Q=kP holds.\
+In other words solve the discrete logarithm problem.")
+    print(f"k = {solveECDLP([2,12],[8,0],[23,7,7])}")
 
 
     print("\nQuestion 5:")
     print("Given the curve E with equation y^2 = x^3 + 7x + 7 mod 23, and the point\
  P=(2,12) on the curve E. \nCompute 17P and enter the coordinates below.\n\
 Hint: use the double-and-add algorithm. ")
-    print(doubleAndAdd([2,12], 17, [23,7,7]))
+    print(f"17P = {doubleAndAdd([2,12], 17, [23,7,7])}")
 
     print("\nQuestion 6:")
     print("Given the elliptic curve E with equation y2=x3+7x+7mod23, and the generator point P=(2,12) on the curve E.")
