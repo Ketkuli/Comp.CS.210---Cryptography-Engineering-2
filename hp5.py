@@ -56,12 +56,20 @@ def addEC(x:list[int,int], y:list[int,int], c:list[int,int, int])->list[int,int]
         # Calculations to get the slope s:
         # Get multiplicative modular inverse for x2-x1:
         gcd, amodp, pmoda = gcdExtended((x2-x1)%p,p)
-        
+
+        # There is no number that fulfills the equation:
+        # a * a^-1 = 1 mod p, where a^-1 == 0.
+        if amodp == 0:
+            return infinity
+
         # Calculate the slope:
         s = ((y2-y1)*amodp)%p
+
+        """
         # Check is slope is vertical:
         if s == 0:
             return infinity
+        """
 
         # Calculate new points:
         x3 = (s**2-x1-x2)%p
@@ -82,7 +90,7 @@ def doublEC(x:list[int,int], c:list[int,int, int])->list[int,int]:
     # Calculations to get the slope s:
     # Get the multiplicative inverse for 2*y1:
     gcd, amodp, pmoda = gcdExtended((2*y1)%p,p)
-
+    
     # Calculate the slope:
     s = ((3*x1**2+a)*amodp)%p
 

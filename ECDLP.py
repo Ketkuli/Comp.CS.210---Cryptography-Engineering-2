@@ -1,4 +1,3 @@
-from new_hp5 import double, addition
 from hp5 import doublEC, addEC
 
 def solveECDLP(P:list[int,int], Q:list[int,int], c:list[int,int,int])->int:
@@ -24,7 +23,7 @@ def solveECDLP(P:list[int,int], Q:list[int,int], c:list[int,int,int])->int:
         else:
             result = addEC(result,P,c)          
         k += 1
-        print(result)
+        #print(result)
 
         if k > 100:
             break
@@ -36,4 +35,4 @@ Q = [8,0]
 C = [23,7,7]
 
 k = solveECDLP(P,Q,C)
-print(k)
+#print(k)
